@@ -23,10 +23,7 @@ struct ContentView: View {
             }
         }
         .frame(height: 50, alignment: .center)
-        
-        .onAppear {
-            viewModel.fetchMoreCharacters()
-        }
+        .task{await viewModel.fetchMoreCharacters( )}
     }
     
     var body: some View {
@@ -45,7 +42,9 @@ struct ContentView: View {
                         Text("An error occurred").foregroundColor(.red).font(.title2)
                         
                         Button(action: {
-                            viewModel.fetchCharacters()
+                            Task{
+                                await viewModel.fetchCharacters()
+                            }
                         }, label: {
                             Text("Retry").foregroundColor(.secondary)
                         })
@@ -65,7 +64,7 @@ struct ContentView: View {
                 .contentMargins(.top, 10)
                 .navigationBarTitle("Rick and Morty Characters", displayMode: .inline)}
         }
-        .onAppear(perform:{viewModel.fetchCharacters( )})
+        .task{ await viewModel.fetchCharacters( )}
         
     }
 }

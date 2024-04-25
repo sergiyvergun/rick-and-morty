@@ -7,10 +7,24 @@
 
 import SwiftUI
 
-enum FetchState {
+enum FetchState: Equatable {
     case initial
     case loading
     case failure(Error)
+    
+    static func == (lhs: FetchState, rhs: FetchState) -> Bool {
+        switch (lhs, rhs) {
+        case (.initial, .initial):
+            return true
+        case (.loading, .loading):
+            return true
+        case let (.failure(error1), .failure(error2)):
+            // Compare errors if they are both failures
+            return error1.localizedDescription == error2.localizedDescription
+        default:
+            return false
+        }
+    }
 }
 
 class CharactersViewModel: ObservableObject {
@@ -20,40 +34,34 @@ class CharactersViewModel: ObservableObject {
     
     private var currentPage: Int = 1
     
-    func fetchCharacters(page: Int = 1) {
+    func fetchCharacters(page: Int = 1) async {
         guard let url = URL(string: "https://rickandmortyapi.com/api/character/?page=\(page)") else {
-            print("Invalid URL")
+            DispatchQueue.main.sync {self.fetchState = .failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil))}
             return
         }
-        self.fetchState = .loading
+        DispatchQueue.main.sync {
+            self.fetchState = .loading}
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data else {
-                print("No data in response: \(error?.localizedDescription ?? "Unknown error")")
-                DispatchQueue.main.async {
-                    self.fetchState = .failure(error ?? NSError(domain: "Unknown error", code: 0, userInfo: nil))
-                }
-                return
-            }
-            do {
-                let result = try JSONDecoder().decode(CharactersResponse.self, from: data)
-                DispatchQueue.main.async {
-                    self.characters.append(contentsOf: result.results)
-                    self.isMoreCharactersAvailable = result.info.next != nil
-                    self.currentPage = page
-                    self.fetchState = .initial
-                }
-            } catch {
-                print("Error decoding JSON: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self.fetchState = .failure(error)
-                }
-            }
-        }.resume()
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let result = try JSONDecoder().decode(CharactersResponse.self, from: data)
+            
+            DispatchQueue.main.sync {
+                
+                self.characters.append(contentsOf: result.results)
+                self.isMoreCharactersAvailable = result.info.next != nil
+                self.currentPage = page
+                self.fetchState = .initial}
+            
+        } catch {
+            DispatchQueue.main.sync {
+                self.fetchState = .failure(error)}
+        }
     }
     
-    func fetchMoreCharacters() {
-        fetchCharacters(page: currentPage + 1)
+    
+    func fetchMoreCharacters() async {
+        await fetchCharacters(page: currentPage + 1)
     }
 }
 
