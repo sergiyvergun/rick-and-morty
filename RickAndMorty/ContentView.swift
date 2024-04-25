@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var viewModel = CharactersViewModel()
+    @State private var showToast = true
     
     var lastRowView: some View {
         ZStack(alignment: .center) {
@@ -17,11 +18,12 @@ struct ContentView: View {
                 ProgressView()
             case .initial:
                 EmptyView()
-            case .failure(let error):
-                Text(error.localizedDescription)
+            case .failure(_):
+                Text("An error occurred")
             }
         }
         .frame(height: 50, alignment: .center)
+        
         .onAppear {
             viewModel.fetchMoreCharacters()
         }
@@ -29,18 +31,39 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(viewModel.characters, id: \.id) { character in
-                    NavigationLink(destination: CharacterDetail(character: character)) {
-                        CharacterListItemView(character: character)
+            if viewModel.characters.isEmpty{
+                switch viewModel.fetchState {
+                case .initial:
+                    EmptyView()
+                    
+                case .loading:
+                    ProgressView().controlSize(.large)
+                    
+                case .failure(_):
+                    VStack(spacing: 10){
+                        Image(systemName: "xmark.octagon").resizable().frame(width: 60,height: 60).foregroundColor(.red)
+                        Text("An error occurred").foregroundColor(.red).font(.title2)
+                        
+                        Button(action: {
+                            viewModel.fetchCharacters()
+                        }, label: {
+                            Text("Retry").foregroundColor(.secondary)
+                        })
                     }
                 }
-                if viewModel.isMoreCharactersAvailable {
-                    lastRowView
+            } else {
+                List {
+                    ForEach(viewModel.characters, id: \.id) { character in
+                        NavigationLink(destination: CharacterDetail(character: character)) {
+                            CharacterListItemView(character: character)
+                        }
+                    }
+                    if viewModel.isMoreCharactersAvailable {
+                        lastRowView
+                    }
                 }
-            }
-            .contentMargins(.top, 10)
-            .navigationBarTitle("Rick and Morty Characters", displayMode: .inline)
+                .contentMargins(.top, 10)
+                .navigationBarTitle("Rick and Morty Characters", displayMode: .inline)}
         }
         .onAppear(perform:{viewModel.fetchCharacters( )})
         

@@ -128,6 +128,8 @@
 			dependencies = (
 			);
 			name = RickAndMorty;
+			packageProductDependencies = (
+			);
 			productName = RickAndMorty;
 			productReference = 071812A32BD9C9260040DF70 /* RickAndMorty.app */;
 			productType = "com.apple.product-type.application";
@@ -156,6 +158,8 @@
 				Base,
 			);
 			mainGroup = 0718129A2BD9C9260040DF70;
+			packageReferences = (
+			);
 			productRefGroup = 071812A42BD9C9260040DF70 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
