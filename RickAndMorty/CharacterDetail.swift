@@ -11,15 +11,12 @@ struct CharacterDetail: View {
                     AsyncImage(url: URL(string: character.image)) { image in
                         image
                             .resizable()
-                            .frame(width: 150, height: 150)
-                            .aspectRatio(contentMode: .fit)
-                        
                     } placeholder: {
                         Image(systemName: "person.fill")
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 150, height: 150)
-                    }.clipShape(.rect(cornerRadius: 20))
+                            .foregroundColor(.secondary).padding(.all, 20)
+                    }.clipShape(.rect(cornerRadius: 20)).frame(width: 150, height: 150)
+                        .aspectRatio(contentMode: .fit)
                     
                     VStack(alignment: .leading, spacing: 5) {
                         Text(character.name)

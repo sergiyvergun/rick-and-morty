@@ -15,20 +15,22 @@ struct CharacterListItemView: View {
             AsyncImage(url: URL(string: character.image)) { image in
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 60, height: 60)
             } placeholder: {
                 Image(systemName: "person.fill")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 50, height: 50)
-            }.clipShape(.rect(cornerRadius: 10))
+                    .foregroundColor(.secondary)
+                    .padding(.all,10)
+            }
+            .aspectRatio(contentMode: .fit)
+            
+            .frame(width: 60, height: 60)
+            .clipShape(.rect(cornerRadius: 10))
             
             VStack(alignment: .leading) {
                 Text(character.name)
                     .font(.headline)
                 Text("Status: \(character.status)")
-                    .font(.subheadline).foregroundColor(.gray)
+                    .font(.subheadline).foregroundColor(.secondary)
             }
         }.padding(.vertical,5)
     }
