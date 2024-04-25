@@ -28,44 +28,54 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            if viewModel.characters.isEmpty{
-                switch viewModel.fetchState {
-                case .initial:
-                    EmptyView()
-                    
-                case .loading:
-                    ProgressView().controlSize(.large)
-                    
-                case .failure(_):
-                    VStack(spacing: 10){
-                        Image(systemName: "xmark.octagon").resizable().frame(width: 60,height: 60).foregroundColor(.red)
-                        Text("An error occurred").foregroundColor(.red).font(.title2)
+            VStack {
+                if viewModel.characters.isEmpty {
+                    switch viewModel.fetchState {
+                    case .initial:
+                        EmptyView()
                         
-                        Button(action: {
-                            Task{
-                                await viewModel.fetchCharacters()
+                    case .loading:
+                        ProgressView().controlSize(.large)
+                        
+                    case .failure(_):
+                        VStack(spacing: 10) {
+                            Image(systemName: "xmark.octagon")
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                                .foregroundColor(.red)
+                            
+                            Text("An error occurred")
+                                .foregroundColor(.red)
+                                .font(.title2)
+                            
+                            Button(action: {
+                                Task {
+                                    await viewModel.fetchCharacters()
+                                }
+                            }) {
+                                Text("Retry").foregroundColor(.secondary)
                             }
-                        }, label: {
-                            Text("Retry").foregroundColor(.secondary)
-                        })
-                    }
-                }
-            } else {
-                List {
-                    ForEach(viewModel.characters, id: \.id) { character in
-                        NavigationLink(destination: CharacterDetail(character: character)) {
-                            CharacterListItemView(character: character)
                         }
                     }
-                    if viewModel.isMoreCharactersAvailable {
-                        lastRowView
+                } else {
+                    List {
+                        ForEach(viewModel.characters, id: \.id) { character in
+                            NavigationLink(destination: CharacterDetail(character: character)) {
+                                CharacterListItemView(character: character)
+                            }
+                        }
+                        if viewModel.isMoreCharactersAvailable {
+                            lastRowView
+                        }
                     }
+                    .navigationBarTitle("Rick and Morty Characters", displayMode: .inline)
+                    .contentMargins(.top, 10)
                 }
-                .contentMargins(.top, 10)
-                .navigationBarTitle("Rick and Morty Characters", displayMode: .inline)}
+            }
         }
-        .task{ await viewModel.fetchCharacters( )}
-        
+        .task {
+            await viewModel.fetchCharacters()
+        }
     }
 }
 
