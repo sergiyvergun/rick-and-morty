@@ -16,9 +16,8 @@ struct CharacterListItemView: View {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 50, height: 50)
+                    .frame(width: 60, height: 60)
             } placeholder: {
-                // Placeholder image if character image is not available
                 Image(systemName: "person.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -28,7 +27,7 @@ struct CharacterListItemView: View {
             VStack(alignment: .leading) {
                 Text(character.name)
                     .font(.headline)
-                Text("Status: "+character.status)
+                Text("Status: \(character.status)")
                     .font(.subheadline).foregroundColor(.gray)
             }
         }.padding(.vertical,5)

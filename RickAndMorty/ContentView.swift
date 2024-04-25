@@ -19,7 +19,7 @@ struct ContentView: View {
                 
                 
             }.contentMargins(.top, 10)
-                .navigationBarTitle("Rick and Morty", displayMode: .inline)
+                .navigationBarTitle("Rick and Morty Characters", displayMode: .inline)
         }.onAppear(perform: viewModel.fetchCharacters)
         
     }
