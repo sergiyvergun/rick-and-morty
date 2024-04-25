@@ -13,7 +13,7 @@ struct LabeledPropertyView: View {
     
     var body: some View {
         LabeledContent() {
-            Text(value).fontWeight(.medium).foregroundColor(.black)
+            Text(value).fontWeight(.medium).foregroundColor(.primary)
         } label: {
             Text(label).foregroundColor(.secondary).fontWeight(.regular)
         }

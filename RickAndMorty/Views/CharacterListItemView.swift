@@ -33,7 +33,9 @@ struct CharacterListItemView: View {
                     .font(.subheadline).foregroundColor(.secondary)
             }
         }.padding(.vertical,5)
+        
     }
+    
 }
 
 struct CharacterListItemView_Previews: PreviewProvider {
