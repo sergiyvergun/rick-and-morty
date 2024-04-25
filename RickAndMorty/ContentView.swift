@@ -8,16 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var viewModel = CharactersViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        NavigationView {
+            List(viewModel.characters) { character in
+                
+                NavigationLink(destination: CharacterDetail(character: character))
+                { CharacterListItemView(character: character);}
+                
+                
+            }.contentMargins(.top, 10)
+                .navigationBarTitle("Rick and Morty", displayMode: .inline)
+        }.onAppear(perform: viewModel.fetchCharacters)
+        
     }
 }
+
 
 #Preview {
     ContentView()
