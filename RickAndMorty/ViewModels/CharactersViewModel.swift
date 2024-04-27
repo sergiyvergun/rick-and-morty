@@ -27,10 +27,11 @@ enum FetchState: Equatable {
     }
 }
 
-class CharactersViewModel: ObservableObject {
-    @Published var characters = [Character]()
-    @Published var fetchState = FetchState.initial
-    @Published var isMoreCharactersAvailable: Bool = false;
+@Observable
+class CharactersViewModel {
+    var characters = [Character]()
+    var fetchState = FetchState.initial
+    var isMoreCharactersAvailable: Bool = false;
     
     private var currentPage: Int = 1
     

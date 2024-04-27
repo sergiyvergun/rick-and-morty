@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var viewModel = CharactersViewModel()
-    @State private var showToast = true
+    @State private var viewModel = CharactersViewModel()
     
     var lastRowView: some View {
         ZStack(alignment: .center) {
