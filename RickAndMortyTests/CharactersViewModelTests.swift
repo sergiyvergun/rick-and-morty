@@ -12,11 +12,11 @@ class CharactersViewModelTests: XCTestCase {
     
     var viewModel: CharactersViewModel!
     
-    override func setUpWithError() throws {
+    override func setUp() {
         viewModel = CharactersViewModel()
     }
     
-    override func tearDownWithError() throws {
+    override func tearDown() {
         viewModel = nil
     }
     
